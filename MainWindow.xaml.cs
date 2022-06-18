@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using NotifyIcon = System.Windows.Forms.NotifyIcon;
 
 namespace XmppMessenger
 {
@@ -20,9 +22,42 @@ namespace XmppMessenger
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NotifyIcon notifyIcon;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            notifyIcon = new NotifyIcon();
+
+            using (Stream stream = Application.GetResourceStream(new Uri("pack://application:,,,/Icon.ico")).Stream)
+            {
+                notifyIcon.Icon = new System.Drawing.Icon(stream);
+            }
+
+            notifyIcon.Click += NotifyIcon_Click;
+        }
+
+        private void NotifyIcon_Click(object sender, EventArgs e)
+        {
+            Application.Current.MainWindow.Show();
+
+            notifyIcon.Visible = false;
+        }
+
+        
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            notifyIcon.Dispose();
+            Application.Current.Shutdown();
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Hide();
+
+            notifyIcon.Visible = true;
+            
         }
     }
 }
