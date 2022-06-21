@@ -33,10 +33,10 @@
 
         <StackPanel Margin="5" Grid.Row="1" Orientation="Vertical">
             <TextBlock Margin="2">Username</TextBlock>
-            <TextBox Margin="2" Padding="5"></TextBox>
+            <TextBox Margin="2" Padding="5" Text="{Binding Jid}"/>
             <TextBlock Margin="2">Password</TextBlock>
-            <TextBox Margin="2" Padding="5"></TextBox>
-            <Button Margin="2" Padding="5">Login</Button>
+            <TextBox Margin="2" Padding="5" Text="{Binding Password}"/>
+            <Button Margin="2" Padding="5" Command="{Binding LoginCommand}">Login</Button>
         </StackPanel>
 
     </Grid>

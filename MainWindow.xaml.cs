@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using NotifyIcon = System.Windows.Forms.NotifyIcon;
+using XmppMessenger.Commands;
 
 namespace XmppMessenger
 {
@@ -36,6 +37,9 @@ namespace XmppMessenger
             }
 
             notifyIcon.Click += NotifyIcon_Click;
+
+            CommandBinding LoginCommandBinding = new CommandBinding(new RelayCommand(_=> MessageBox.Show("test")));
+            this.CommandBindings.Add(LoginCommandBinding);
         }
 
         private void NotifyIcon_Click(object sender, EventArgs e)

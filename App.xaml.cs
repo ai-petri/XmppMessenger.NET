@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using XmppMessenger.ViewModels;
 
 namespace XmppMessenger
 {
@@ -13,5 +14,11 @@ namespace XmppMessenger
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            new MainWindow { DataContext = new MainViewModel() }.Show();
+        }
     }
 }
