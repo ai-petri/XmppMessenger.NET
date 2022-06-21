@@ -11,12 +11,14 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows;
 
 namespace XmppMessenger
 {
     class XMPPClient
     {
         string hostname = "";
+        string resource = "messenger";
 
         NetworkStream stream;
         SslStream sslStream;
@@ -271,6 +273,22 @@ namespace XmppMessenger
 
             if (v == Convert.ToBase64String(serverSignature))
             {
+                // start stream
+                Write($"<?xml version=\"1.0\"?><stream:stream to=\"{hostname}\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">");
+                Read();
+
+                // bind resourse
+                Write($"<iq id=\"_xmpp_bind1\" type=\"set\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>${resource}</resource></bind></iq>");
+                Read();
+
+                // start session
+                Write($"<iq to=\"{hostname}\" type=\"set\" id=\"sess_1\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>");
+                ReadXML("sess_1");
+
+                // send presence
+                Write("<presence />");
+                ReadXML("presence");
+
                 return true;
             }
 

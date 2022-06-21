@@ -39,6 +39,18 @@ namespace XmppMessenger.ViewModels
             }
         }
 
+        private bool loggedIn = false;
+
+        public bool LoggedIn
+        {
+            get => loggedIn;
+            set
+            {
+                loggedIn = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public string Username
         {
             get => Jid.Split("@")[0];
@@ -60,7 +72,7 @@ namespace XmppMessenger.ViewModels
 
                 if(client.Connect(Hostname, Username, Password))
                 {
-                    MessageBox.Show("SUCCESS");
+                    LoggedIn = true;
                 }
             });
         }

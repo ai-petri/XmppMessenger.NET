@@ -6,6 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XmppMessenger"
+        xmlns:converters="clr-namespace:XmppMessenger.Converters" xmlns:viewmodels="clr-namespace:XmppMessenger.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="XMPP Messenger" Height="450" Width="200"
         Icon="Icon.ico"
@@ -17,6 +18,10 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{Binding ActualHeight,ElementName=TitleBar}"/>
     </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+        <converters:VisibilityInverter x:Key="visibilityInverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -31,7 +36,7 @@
         </StackPanel>
 
 
-        <StackPanel Margin="5" Grid.Row="1" Orientation="Vertical">
+        <StackPanel Visibility="{Binding Path=Visibility, ElementName=Roster, Converter={StaticResource visibilityInverter}}" Margin="5" Grid.Row="1" Orientation="Vertical">
             <TextBlock Margin="2">Username</TextBlock>
             <TextBox Margin="2" Padding="5" Text="{Binding Jid}"/>
             <TextBlock Margin="2">Password</TextBlock>
@@ -39,6 +44,7 @@
             <Button Margin="2" Padding="5" Command="{Binding LoginCommand}">Login</Button>
         </StackPanel>
 
+        <TextBlock x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}"></TextBlock>
     </Grid>
     
 </Window>
