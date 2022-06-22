@@ -33,6 +33,7 @@ namespace XmppMessenger
             get => client.Connected;
         }
 
+
         string Read()
         {
             while (!stream.DataAvailable)
@@ -169,7 +170,7 @@ namespace XmppMessenger
 
             // challenge
 
-            XElement XMLFromServer1 = ReadXML("challenge");
+            XElement XMLFromServer1 = await Task.Run(()=>ReadXML("challenge"));
 
             if (XMLFromServer1.Name.LocalName != "challenge")
             {
@@ -247,7 +248,7 @@ namespace XmppMessenger
 
             // success
 
-            XElement XMLFromServer2 = ReadXML();
+            XElement XMLFromServer2 = await Task.Run(()=>ReadXML());
 
             if (XMLFromServer2.Name.LocalName == "failure")
             {
@@ -290,11 +291,12 @@ namespace XmppMessenger
 
                 // start session
                 Write($"<iq to=\"{hostname}\" type=\"set\" id=\"sess_1\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>");
-                ReadXML("sess_1");
+                await Task.Run(()=>ReadXML("sess_1"));
 
                 // send presence
                 Write("<presence />");
-                ReadXML("presence");
+                await Task.Run(() => ReadXML("presence"));
+
 
                 return true;
             }

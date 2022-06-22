@@ -69,9 +69,9 @@ namespace XmppMessenger.ViewModels
 
         public MainViewModel()
         {
-            LoginCommand = new RelayCommand(_ =>
+            LoginCommand = new RelayCommand(async _ =>
             {
-                bool success = client.Connect(Hostname, Username, Password).Result;
+                bool success = await client.Connect(Hostname, Username, Password);
 
                 if(success)
                 {
