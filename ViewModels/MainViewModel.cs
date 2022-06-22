@@ -71,7 +71,8 @@ namespace XmppMessenger.ViewModels
         {
             LoginCommand = new RelayCommand(_ =>
             {
-                bool success = Task.Factory.StartNew(() => client.Connect(Hostname, Username, Password)).Result;
+                bool success = client.Connect(Hostname, Username, Password).Result;
+
                 if(success)
                 {
                     LoggedIn = true;

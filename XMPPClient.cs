@@ -112,7 +112,7 @@ namespace XmppMessenger
         }
 
 
-        public bool Connect(string hostname, string username, string password)
+        public async Task<bool> Connect(string hostname, string username, string password)
         {
             try
             {
