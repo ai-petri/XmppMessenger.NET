@@ -24,7 +24,9 @@ namespace XmppMessenger
         SslStream sslStream;
         TcpClient client = new TcpClient();
 
+        Thread thread;
 
+        volatile bool running;
 
         public bool Connected
         {
@@ -102,6 +104,13 @@ namespace XmppMessenger
         public void Close()
         {
             client.Close();
+            running = false;
+            if (thread != null)
+            {
+                thread.Join();
+
+                MessageBox.Show(thread.ThreadState.ToString());
+            }
         }
 
 
@@ -296,7 +305,28 @@ namespace XmppMessenger
 
         }
 
+        public void Listen()
+        {
+            thread = new Thread(new ThreadStart(() =>
+            {
+                while (Connected && running)
+                {
+                    try
+                    {
+                        XElement element = ReadXML();
+                        MessageBox.Show(element.Name.ToString());
 
+                    }
+                    catch (Exception) { }
+
+                }
+            }));
+
+            running = true;
+            thread.Start();
+
+
+        }
 
 
     }
