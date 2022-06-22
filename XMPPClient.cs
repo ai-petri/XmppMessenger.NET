@@ -55,10 +55,16 @@ namespace XmppMessenger
             return Encoding.UTF8.GetString(bytes);
         }
 
-        XElement ReadXML(string expected = "")
+        string Read(string expected = "")
         {
             string text = Read();
             while (!text.Contains(expected)) text = Read();
+            return text;
+        }
+
+        XElement ReadXML(string expected = "")
+        {
+            string text = Read(expected);
 
             string repaired = "";
 
@@ -133,17 +139,14 @@ namespace XmppMessenger
 
 
             // stream:stream
-            Read();
+            await Task.Run(()=>Read());
 
 
             //StartTLS -------------------------------------------------------------------------------
 
             Write("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>");
 
-            string serverResponse = Read();
-
-            while (!serverResponse.Contains("proceed"))
-                serverResponse = Read();
+            string serverResponse = await Task.Run(()=>Read("proceed"));
 
             sslStream = new SslStream(stream);
 
@@ -166,7 +169,7 @@ namespace XmppMessenger
 
             string message1 = $"<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"SCRAM-SHA-1\">{Convert.ToBase64String(Encoding.UTF8.GetBytes(str))}</auth>";
             Write(message1);
-            Read();
+            await Task.Run(() => Read());
 
             // challenge
 
@@ -283,11 +286,11 @@ namespace XmppMessenger
             {
                 // start stream
                 Write($"<?xml version=\"1.0\"?><stream:stream to=\"{hostname}\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">");
-                Read();
+                await Task.Run(() => Read());
 
                 // bind resourse
                 Write($"<iq id=\"_xmpp_bind1\" type=\"set\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>${resource}</resource></bind></iq>");
-                Read();
+                await Task.Run(() => Read());
 
                 // start session
                 Write($"<iq to=\"{hostname}\" type=\"set\" id=\"sess_1\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>");
