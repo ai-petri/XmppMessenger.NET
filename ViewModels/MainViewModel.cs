@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -62,7 +63,7 @@ namespace XmppMessenger.ViewModels
             get => Jid.Split("@")[1];
         }
 
-
+        public ObservableCollection<string> Roster { get; private set; } = new ObservableCollection<string>();
 
         public RelayCommand LoginCommand { get; private set; }
         public RelayCommand LogoutCommand { get; private set; }

@@ -44,7 +44,7 @@
             <Button Margin="2" Padding="5" Command="{Binding LoginCommand}">Login</Button>
         </StackPanel>
 
-        <TextBlock x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}"></TextBlock>
+        <ListBox x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}" ItemsSource="{Binding Roster}"></ListBox>
     </Grid>
     
 </Window>
