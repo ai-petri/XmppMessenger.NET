@@ -65,6 +65,7 @@ namespace XmppMessenger.ViewModels
 
 
         public RelayCommand LoginCommand { get; private set; }
+        public RelayCommand LogoutCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -77,8 +78,20 @@ namespace XmppMessenger.ViewModels
 
                     client.Listen();
                 }
-            });
+
+            }, _=> !LoggedIn);
+
+
+            LogoutCommand = new RelayCommand(_ =>
+            {
+                LoggedIn = false;
+
+                client.Close();
+            
+            }, _=> LoggedIn);
         }
+
+
 
         public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {

@@ -108,8 +108,6 @@ namespace XmppMessenger
             if (thread != null)
             {
                 thread.Join();
-
-                MessageBox.Show(thread.ThreadState.ToString());
             }
         }
 

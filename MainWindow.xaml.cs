@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using NotifyIcon = System.Windows.Forms.NotifyIcon;
 using XmppMessenger.Commands;
+using XmppMessenger.ViewModels;
 
 namespace XmppMessenger
 {
@@ -51,6 +52,11 @@ namespace XmppMessenger
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             notifyIcon.Dispose();
+
+            MainViewModel model = (MainViewModel)DataContext;
+
+            model.LogoutCommand.Execute(null);
+
             Application.Current.Shutdown();
         }
 
