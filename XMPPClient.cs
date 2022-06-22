@@ -33,6 +33,14 @@ namespace XmppMessenger
             get => client.Connected;
         }
 
+        public event Action<XElement> MessageRecieved;
+        public event Action<string[]> RosterRecieved;
+
+        public XMPPClient()
+        {
+            MessageRecieved += processMessage;
+        }
+
 
         string Read()
         {
@@ -317,10 +325,12 @@ namespace XmppMessenger
                     try
                     {
                         XElement element = ReadXML();
-                        MessageBox.Show(element.Name.ToString());
-
+                        MessageRecieved?.Invoke(element);
                     }
-                    catch (Exception) { }
+                    catch (Exception e) {
+
+                        MessageBox.Show(e.Message);
+                    }
 
                 }
             }));
@@ -328,9 +338,32 @@ namespace XmppMessenger
             running = true;
             thread.Start();
 
-
         }
 
 
+        void processMessage(XElement element)
+        {
+            string name = element.Name.LocalName;
+            string type = element.Attributes()?.Where(o => o.Name.LocalName == "type").FirstOrDefault()?.Value;
+            
+
+            if (name == "iq" && type == "result")
+            {
+                XElement query = element.Elements().Where(o => o.Name.LocalName == "query").FirstOrDefault();
+
+                if(query.Name.Namespace.ToString() == "jabber:iq:roster")
+                {
+                    
+                    string[] jids = query.Elements().Select(o => o.Attributes().Where(o => o.Name.LocalName == "jid").Select(o => o.Value).FirstOrDefault()).ToArray();
+                    RosterRecieved?.Invoke(jids);
+                }
+            }
+        }
+
+        public void Roster()
+        {
+            
+            Write($"<iq id=\"1234\" type=\"get\"><query xmlns=\"jabber:iq:roster\"/></iq>");
+        }
     }
 }

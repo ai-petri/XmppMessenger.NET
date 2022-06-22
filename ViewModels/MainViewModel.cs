@@ -64,12 +64,22 @@ namespace XmppMessenger.ViewModels
         }
 
         public ObservableCollection<string> Roster { get; private set; } = new ObservableCollection<string>();
+        
 
         public RelayCommand LoginCommand { get; private set; }
         public RelayCommand LogoutCommand { get; private set; }
 
         public MainViewModel()
         {
+            client.RosterRecieved += jids =>
+            {      
+                foreach (string jid in jids)
+                {
+                    Application.Current.Dispatcher.Invoke(() => Roster.Add(jid));
+                }
+            };
+
+
             LoginCommand = new RelayCommand(async _ =>
             {
                 bool success = await client.Connect(Hostname, Username, Password);
@@ -79,6 +89,8 @@ namespace XmppMessenger.ViewModels
                     LoggedIn = true;
 
                     client.Listen();
+
+                    client.Roster();
                 }
 
             }, _=> !LoggedIn);
