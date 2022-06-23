@@ -127,7 +127,6 @@ namespace XmppMessenger
             {
                 thread.Join();
             }
-            MessageBox.Show("joined");
             client.Close();
         }
 
@@ -344,7 +343,6 @@ namespace XmppMessenger
 
                         MessageBox.Show(e.Message);
                     }
-
                 }
             }));
 
