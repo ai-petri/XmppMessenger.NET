@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using XmppMessenger.Commands;
+using XmppMessenger.Views;
 
 namespace XmppMessenger.ViewModels
 {
@@ -68,6 +69,7 @@ namespace XmppMessenger.ViewModels
 
         public RelayCommand LoginCommand { get; private set; }
         public RelayCommand LogoutCommand { get; private set; }
+        public RelayCommand OpenChatCommand { get; private set; }
 
         public MainViewModel()
         {
@@ -105,6 +107,8 @@ namespace XmppMessenger.ViewModels
                 client.Close();
             
             }, _=> LoggedIn);
+
+            OpenChatCommand = new RelayCommand(jid => new ChatWindow((string)jid).Show());
         }
 
 

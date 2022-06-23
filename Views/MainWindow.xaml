@@ -44,7 +44,13 @@
             <Button Margin="2" Padding="5" Command="{Binding LoginCommand}">Login</Button>
         </StackPanel>
 
-        <ListBox x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}" ItemsSource="{Binding Roster}"></ListBox>
+        <ListBox x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}" ItemsSource="{Binding Roster}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" MouseDown="RosterItem_MouseDown" ></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
     
 </Window>

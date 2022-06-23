@@ -67,5 +67,13 @@ namespace XmppMessenger
             notifyIcon.Visible = true;
             
         }
+
+        private void RosterItem_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainViewModel model = (MainViewModel)DataContext;
+
+            model.OpenChatCommand.Execute(((TextBlock)sender).Text);
+
+        }
     }
 }
