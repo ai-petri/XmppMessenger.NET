@@ -26,7 +26,7 @@ namespace XmppMessenger
 
         Thread thread;
 
-        volatile bool running;
+        volatile bool running = true;
 
         public bool Connected
         {
@@ -44,10 +44,11 @@ namespace XmppMessenger
 
         string Read()
         {
-            while (!stream.DataAvailable)
+            while (running && !stream.DataAvailable)
             {
                 Thread.Sleep(500);
             }
+            if (!running) return "";
 
             byte[] bytes = new byte[2048];
 
@@ -73,6 +74,8 @@ namespace XmppMessenger
         XElement ReadXML(string expected = "")
         {
             string text = Read(expected);
+
+            if (text == "") return new XElement("dummy");
 
             string repaired = "";
 
@@ -118,12 +121,14 @@ namespace XmppMessenger
 
         public void Close()
         {
-            client.Close();
+            
             running = false;
             if (thread != null)
             {
                 thread.Join();
             }
+            MessageBox.Show("joined");
+            client.Close();
         }
 
 
@@ -183,7 +188,7 @@ namespace XmppMessenger
 
             XElement XMLFromServer1 = await Task.Run(()=>ReadXML("challenge"));
 
-            if (XMLFromServer1.Name.LocalName != "challenge")
+            if (XMLFromServer1 == null || XMLFromServer1.Name.LocalName != "challenge")
             {
                 client.Close();
                 return false;
@@ -261,13 +266,18 @@ namespace XmppMessenger
 
             XElement XMLFromServer2 = await Task.Run(()=>ReadXML());
 
-            if (XMLFromServer2.Name.LocalName == "failure")
+            if(XMLFromServer2 == null)
             {
-                Console.WriteLine(XMLFromServer2.Value);
+                client.Close();
+                return false;
             }
 
             if (XMLFromServer2.Name.LocalName != "success")
             {
+                if (XMLFromServer2.Name.LocalName == "failure")
+                {
+                    MessageBox.Show(XMLFromServer2.Value);
+                }
                 client.Close();
                 return false;
             }
@@ -302,11 +312,11 @@ namespace XmppMessenger
 
                 // start session
                 Write($"<iq to=\"{hostname}\" type=\"set\" id=\"sess_1\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>");
-                await Task.Run(()=>ReadXML("sess_1"));
+                await Task.Run(()=>Read("sess_1"));
 
                 // send presence
                 Write("<presence />");
-                await Task.Run(() => ReadXML("presence"));
+                await Task.Run(() => Read("presence"));
 
 
                 return true;
@@ -325,7 +335,10 @@ namespace XmppMessenger
                     try
                     {
                         XElement element = ReadXML();
-                        MessageRecieved?.Invoke(element);
+                        if(element != null)
+                        {
+                            MessageRecieved?.Invoke(element);
+                        }
                     }
                     catch (Exception e) {
 
@@ -335,9 +348,7 @@ namespace XmppMessenger
                 }
             }));
 
-            running = true;
             thread.Start();
-
         }
 
 
