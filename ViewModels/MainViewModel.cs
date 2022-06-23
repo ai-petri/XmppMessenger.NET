@@ -90,6 +90,8 @@ namespace XmppMessenger.ViewModels
 
                     client.Listen();
 
+                    await Task.Delay(500);
+
                     client.Roster();
                 }
 
