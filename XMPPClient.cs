@@ -75,7 +75,7 @@ namespace XmppMessenger
         {
             string text = Read(expected);
 
-            if (text == "") return new XElement("dummy");
+            if (text == "") return null;
 
             string repaired = "";
 
