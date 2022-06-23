@@ -9,7 +9,7 @@
         xmlns:converters="clr-namespace:XmppMessenger.Converters" xmlns:viewmodels="clr-namespace:XmppMessenger.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="XMPP Messenger" Height="450" Width="200"
-        Icon="Icon.ico"
+        Icon="/Icon.ico"
         
         BorderBrush="Aqua"
         BorderThickness="2"
