@@ -78,7 +78,7 @@ namespace XmppMessenger.ViewModels
             }
         }
 
-
+        private List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public RelayCommand LoginCommand { get; private set; }
         public RelayCommand LogoutCommand { get; private set; }
@@ -120,8 +120,27 @@ namespace XmppMessenger.ViewModels
                 client.Close();
             
             }, _=> LoggedIn);
+            OpenChatCommand = new RelayCommand(_ =>
+            {
 
-            OpenChatCommand = new RelayCommand(_ => new ChatWindow {DataContext = new ChatViewModel(Selected) }.Show());
+                ChatWindow window = chatWindows.Where(w => ((ChatViewModel)w.DataContext).User.ToString() == Selected.ToString()).FirstOrDefault();
+                if(window == null)
+                {
+                    window = new ChatWindow { DataContext = new ChatViewModel(Selected) };
+                    chatWindows.Add(window);
+                    window.Closed += (obj, args) => chatWindows.Remove(window);
+                    window.Show();
+                }
+                else
+                {
+                    if(window.WindowState == WindowState.Minimized)
+                    {
+                        window.WindowState = WindowState.Normal;
+                    }
+                    window.Focus();
+                }
+                
+            });
         }
 
 
