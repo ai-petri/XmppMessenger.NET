@@ -67,6 +67,7 @@ namespace XmppMessenger.ViewModels
 
         public ObservableCollection<User> Roster { get; private set; } = new ObservableCollection<User>();
 
+        private Dictionary<string, ChatViewModel> chatViewModels = new Dictionary<string, ChatViewModel>();
         private List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public RelayCommand LoginCommand { get; private set; }
@@ -79,7 +80,9 @@ namespace XmppMessenger.ViewModels
             {      
                 foreach (string jid in jids)
                 {
-                    Application.Current.Dispatcher.Invoke(() => Roster.Add(new User(jid)));
+                    User user = new User(jid);
+                    Application.Current.Dispatcher.Invoke(() => Roster.Add(user));
+                    chatViewModels.Add(jid, new ChatViewModel(user, client));
                 }
             };
 
@@ -115,7 +118,9 @@ namespace XmppMessenger.ViewModels
                 ChatWindow window = chatWindows.Where(w => ((ChatViewModel)w.DataContext).User.ToString() == user.ToString()).FirstOrDefault();
                 if(window == null)
                 {
-                    window = new ChatWindow { DataContext = new ChatViewModel((User)user, client) };
+                    ChatViewModel model;
+                    chatViewModels.TryGetValue(user.ToString(), out model);
+                    window = new ChatWindow { DataContext = model };
                     chatWindows.Add(window);
                     window.Closed += (obj, args) => chatWindows.Remove(window);
                     window.Show();
