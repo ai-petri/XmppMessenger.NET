@@ -44,10 +44,10 @@
             <Button Margin="2" Padding="5" Command="{Binding LoginCommand}">Login</Button>
         </StackPanel>
 
-        <ListBox x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}" ItemsSource="{Binding Roster}">
+        <ListBox x:Name="Roster" Background="White" Margin="5"  Grid.Row="1" Visibility="{Binding LoggedIn, Converter={StaticResource booleanToVisibilityConverter}}" ItemsSource="{Binding Roster}" SelectedItem="{Binding Selected}" SelectionChanged="Roster_SelectionChanged" SelectionMode="Single">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" MouseDown="RosterItem_MouseDown" ></TextBlock>
+                    <TextBlock Text="{Binding}" ></TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using XmppMessenger.Models;
 
 namespace XmppMessenger.Views
 {
@@ -19,11 +20,9 @@ namespace XmppMessenger.Views
     /// </summary>
     public partial class ChatWindow : Window
     {
-        public ChatWindow(string jid)
+        public ChatWindow()
         {
             InitializeComponent();
-
-            Title = jid;
         }
     }
 }

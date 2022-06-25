@@ -66,7 +66,19 @@ namespace XmppMessenger.ViewModels
         }
 
         public ObservableCollection<User> Roster { get; private set; } = new ObservableCollection<User>();
-        
+
+        private User selected;
+        public User Selected
+        {
+            get => selected;
+            set
+            {
+                selected = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
 
         public RelayCommand LoginCommand { get; private set; }
         public RelayCommand LogoutCommand { get; private set; }
@@ -109,7 +121,7 @@ namespace XmppMessenger.ViewModels
             
             }, _=> LoggedIn);
 
-            OpenChatCommand = new RelayCommand(jid => new ChatWindow((string)jid).Show());
+            OpenChatCommand = new RelayCommand(_ => new ChatWindow {DataContext = new ChatViewModel(Selected) }.Show());
         }
 
 

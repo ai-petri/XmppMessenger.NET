@@ -68,12 +68,12 @@ namespace XmppMessenger
             
         }
 
-        private void RosterItem_MouseDown(object sender, MouseButtonEventArgs e)
+
+        private void Roster_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MainViewModel model = (MainViewModel)DataContext;
 
-            model.OpenChatCommand.Execute(((TextBlock)sender).Text);
-
+            model.OpenChatCommand.Execute(null);
         }
     }
 }
