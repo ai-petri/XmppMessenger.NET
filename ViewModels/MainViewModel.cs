@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using XmppMessenger.Commands;
+using XmppMessenger.Models;
 using XmppMessenger.Views;
 
 namespace XmppMessenger.ViewModels
@@ -64,7 +65,7 @@ namespace XmppMessenger.ViewModels
             get => Jid.Split("@")[1];
         }
 
-        public ObservableCollection<string> Roster { get; private set; } = new ObservableCollection<string>();
+        public ObservableCollection<User> Roster { get; private set; } = new ObservableCollection<User>();
         
 
         public RelayCommand LoginCommand { get; private set; }
@@ -77,7 +78,7 @@ namespace XmppMessenger.ViewModels
             {      
                 foreach (string jid in jids)
                 {
-                    Application.Current.Dispatcher.Invoke(() => Roster.Add(jid));
+                    Application.Current.Dispatcher.Invoke(() => Roster.Add(new User(jid)));
                 }
             };
 
