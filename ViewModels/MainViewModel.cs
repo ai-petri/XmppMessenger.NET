@@ -67,17 +67,6 @@ namespace XmppMessenger.ViewModels
 
         public ObservableCollection<User> Roster { get; private set; } = new ObservableCollection<User>();
 
-        private User selected;
-        public User Selected
-        {
-            get => selected;
-            set
-            {
-                selected = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private List<ChatWindow> chatWindows = new List<ChatWindow>();
 
         public RelayCommand LoginCommand { get; private set; }
@@ -120,13 +109,13 @@ namespace XmppMessenger.ViewModels
                 client.Close();
             
             }, _=> LoggedIn);
-            OpenChatCommand = new RelayCommand(_ =>
+            OpenChatCommand = new RelayCommand(user =>
             {
 
-                ChatWindow window = chatWindows.Where(w => ((ChatViewModel)w.DataContext).User.ToString() == Selected.ToString()).FirstOrDefault();
+                ChatWindow window = chatWindows.Where(w => ((ChatViewModel)w.DataContext).User.ToString() == user.ToString()).FirstOrDefault();
                 if(window == null)
                 {
-                    window = new ChatWindow { DataContext = new ChatViewModel(Selected) };
+                    window = new ChatWindow { DataContext = new ChatViewModel((User)user) };
                     chatWindows.Add(window);
                     window.Closed += (obj, args) => chatWindows.Remove(window);
                     window.Show();

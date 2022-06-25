@@ -16,6 +16,7 @@ using System.IO;
 using NotifyIcon = System.Windows.Forms.NotifyIcon;
 using XmppMessenger.Commands;
 using XmppMessenger.ViewModels;
+using XmppMessenger.Models;
 
 namespace XmppMessenger
 {
@@ -69,11 +70,13 @@ namespace XmppMessenger
         }
 
 
-        private void Roster_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MainViewModel model = (MainViewModel)DataContext;
 
-            model.OpenChatCommand.Execute(null);
+            object user = ((TextBlock)sender).DataContext;
+
+            model.OpenChatCommand.Execute(user);
         }
     }
 }
