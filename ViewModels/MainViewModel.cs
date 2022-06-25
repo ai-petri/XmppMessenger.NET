@@ -80,8 +80,7 @@ namespace XmppMessenger.ViewModels
             {      
                 foreach (string jid in jids)
                 {
-                    User user = new User(jid);
-                    Application.Current.Dispatcher.Invoke(() => Roster.Add(user));
+                    User user = FindOrAddUser(jid);
                     chatViewModels.Add(jid, new ChatViewModel(user, client));
                 }
             };
@@ -135,9 +134,40 @@ namespace XmppMessenger.ViewModels
                 }
                 
             });
+
+            client.MessageRecieved += ProcessMessage;
+            client.PresenceRecieved += ProcessPresence;
         }
 
+        private void ProcessMessage(Message message)
+        {
+            AddResourceToRoster(message.Jid, message.Resource);
+        }
 
+        private void ProcessPresence(Presence presence)
+        {
+            AddResourceToRoster(presence.Jid, presence.Resource);
+        }
+
+        private void AddResourceToRoster(string userJid, string resource)
+        {
+            User user = FindOrAddUser(userJid);
+
+            user.Resources.Add(resource);
+        }
+
+        private User FindOrAddUser(string userJid)
+        {
+            User user = Roster.Where(user => user.Jid == userJid).FirstOrDefault();
+
+            if (user == null)
+            {
+                user = new User(userJid);
+                Application.Current.Dispatcher.Invoke(() => Roster.Add(user));
+            }
+
+            return user;
+        }
 
         public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {

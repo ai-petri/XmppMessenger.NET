@@ -20,6 +20,7 @@ namespace XmppMessenger
     {
         string hostname = "";
         string resource = "messenger";
+        Random random = new Random();
 
         NetworkStream stream;
         SslStream sslStream;
@@ -37,6 +38,7 @@ namespace XmppMessenger
 
         public event Action<string[]> RosterRecieved;
         public event Action<Message> MessageRecieved;
+        public event Action<Presence> PresenceRecieved;
 
 
         string Read()
@@ -371,12 +373,18 @@ namespace XmppMessenger
                 string text = element.Value;
                 MessageRecieved?.Invoke(new Message(type, from, text));
             }
+
+            if(name == "presence")
+            {
+                string from = element.Attributes().Where(o => o.Name.LocalName == "from").Select(o => o.Value).FirstOrDefault();
+                PresenceRecieved?.Invoke(new Presence(from));
+            }
         }
 
         public void Roster()
         {
             
-            Write($"<iq id=\"1234\" type=\"get\"><query xmlns=\"jabber:iq:roster\"/></iq>");
+            Write($"<iq id=\"{random.Next()}\" type=\"get\"><query xmlns=\"jabber:iq:roster\"/></iq>");
         }
 
 
@@ -384,7 +392,7 @@ namespace XmppMessenger
         {
             foreach (string resource in user.Resources)
             {
-                Write($"<message id=\"msg_1\" to=\"{ user.ToString() + "/" + resource}\" type=\"chat\"><body>{text}</body></message>");
+                Write($"<message id=\"msg_{random.Next()}\" to=\"{ user.ToString() + "/" + resource}\" type=\"chat\"><body>{text}</body></message>");
             }
         }
     }

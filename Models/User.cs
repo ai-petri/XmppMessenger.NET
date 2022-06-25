@@ -20,10 +20,14 @@ namespace XmppMessenger.Models
             hostname = parts[1];
         }
 
+        public string Jid
+        {
+            get => $"{username}@{hostname}";
+        }
 
         public override string ToString()
         {
-            return $"{username}@{hostname}";
+            return Jid;
         }
 
         

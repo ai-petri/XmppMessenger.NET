@@ -22,6 +22,10 @@ namespace XmppMessenger.Models
         public string From { get; }
         public string Text { get; }
 
+        public string Jid
+        {
+            get => From.Split("/")[0];
+        }
         public string Resource
         {
             get => From.Split("/")[1];

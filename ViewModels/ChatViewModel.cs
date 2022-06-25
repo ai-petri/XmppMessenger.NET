@@ -65,7 +65,7 @@ namespace XmppMessenger.ViewModels
 
         private void ProcessMessage(Message message)
         {
-            if(message.From.StartsWith(User.ToString()))
+            if(message.From.StartsWith(User.Jid))
             {
                 Chat += message.Text;
                 Chat += "\n";
