@@ -25,5 +25,7 @@ namespace XmppMessenger.Models
         {
             return $"{username}@{hostname}";
         }
+
+        
     }
 }

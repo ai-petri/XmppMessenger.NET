@@ -4,9 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XmppMessenger.Views"
+        xmlns:viewmodels="clr-namespace:XmppMessenger.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ChatViewModel}"
         mc:Ignorable="d"
-        Title="{Binding User}" Height="450" Width="800">
+        Title="{Binding User}" Height="450" Width="800" Background="LightGray">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Margin="5" Background="White" Text="{Binding Chat}"/>
+        <TextBox x:Name="text" Grid.Row="1" Margin="5" Text="{Binding Text}"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button Margin="5" Command="{Binding SendMessageCommand}">Send</Button>
+        </StackPanel>
     </Grid>
 </Window>

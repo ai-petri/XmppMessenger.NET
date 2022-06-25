@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using XmppMessenger.Commands;
 using XmppMessenger.Models;
 
 namespace XmppMessenger.ViewModels
@@ -26,10 +28,48 @@ namespace XmppMessenger.ViewModels
             }
         }
 
+        private string text;
 
-        public ChatViewModel(User user)
+        public string Text
+        {
+            get => text;
+            set
+            {
+                text = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string chat;
+
+        public string Chat
+        {
+            get => chat;
+            set
+            {
+                chat = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public RelayCommand SendMessageCommand { get; private set; }
+
+        public ChatViewModel(User user, XMPPClient client)
         {
             this.user = user;
+
+            client.MessageRecieved += ProcessMessage;
+
+            SendMessageCommand = new RelayCommand(_ => { client.SendMessage(user, Text); Text = ""; });
+        }
+
+        private void ProcessMessage(Message message)
+        {
+            if(message.From.StartsWith(User.ToString()))
+            {
+                Chat += message.Text;
+                Chat += "\n";
+            }
         }
 
         public void RaisePropertyChanged([CallerMemberName] string propertyName = "")

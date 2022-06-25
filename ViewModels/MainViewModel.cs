@@ -115,7 +115,7 @@ namespace XmppMessenger.ViewModels
                 ChatWindow window = chatWindows.Where(w => ((ChatViewModel)w.DataContext).User.ToString() == user.ToString()).FirstOrDefault();
                 if(window == null)
                 {
-                    window = new ChatWindow { DataContext = new ChatViewModel((User)user) };
+                    window = new ChatWindow { DataContext = new ChatViewModel((User)user, client) };
                     chatWindows.Add(window);
                     window.Closed += (obj, args) => chatWindows.Remove(window);
                     window.Show();

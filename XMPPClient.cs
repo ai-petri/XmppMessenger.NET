@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
+using XmppMessenger.Models;
 
 namespace XmppMessenger
 {
@@ -33,13 +34,9 @@ namespace XmppMessenger
             get => client.Connected;
         }
 
-        public event Action<XElement> MessageRecieved;
-        public event Action<string[]> RosterRecieved;
 
-        public XMPPClient()
-        {
-            MessageRecieved += processMessage;
-        }
+        public event Action<string[]> RosterRecieved;
+        public event Action<Message> MessageRecieved;
 
 
         string Read()
@@ -336,7 +333,7 @@ namespace XmppMessenger
                         XElement element = ReadXML();
                         if(element != null)
                         {
-                            MessageRecieved?.Invoke(element);
+                            processMessage(element);
                         }
                     }
                     catch (Exception e) {
@@ -367,12 +364,28 @@ namespace XmppMessenger
                     RosterRecieved?.Invoke(jids);
                 }
             }
+
+            if(name == "message")
+            {
+                string from = element.Attributes().Where(o => o.Name.LocalName == "from").Select(o => o.Value).FirstOrDefault();
+                string text = element.Value;
+                MessageRecieved?.Invoke(new Message(type, from, text));
+            }
         }
 
         public void Roster()
         {
             
             Write($"<iq id=\"1234\" type=\"get\"><query xmlns=\"jabber:iq:roster\"/></iq>");
+        }
+
+
+        public void SendMessage(User user, string text)
+        {
+            foreach (string resource in user.Resources)
+            {
+                Write($"<message id=\"msg_1\" to=\"{ user.ToString() + "/" + resource}\" type=\"chat\"><body>{text}</body></message>");
+            }
         }
     }
 }
