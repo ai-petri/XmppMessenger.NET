@@ -40,7 +40,7 @@
         </ItemsControl>
 
         </ScrollViewer>
-        <TextBox x:Name="text" Grid.Row="1" Margin="5" Text="{Binding Text}"/>
+        <TextBox x:Name="text" Grid.Row="1" Margin="5" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" KeyDown="text_KeyDown"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button Margin="5" Command="{Binding SendMessageCommand}">Send</Button>
         </StackPanel>

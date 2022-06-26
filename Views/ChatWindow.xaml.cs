@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using XmppMessenger.Models;
+using XmppMessenger.ViewModels;
 
 namespace XmppMessenger.Views
 {
@@ -23,6 +24,14 @@ namespace XmppMessenger.Views
         public ChatWindow()
         {
             InitializeComponent();
+        }
+
+        private void text_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                ((ChatViewModel)DataContext).SendMessageCommand.Execute(null);
+            }
         }
     }
 }
