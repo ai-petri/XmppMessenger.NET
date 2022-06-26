@@ -19,7 +19,9 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ItemsControl Grid.Row="0" Margin="5" Padding="5" Background="White" ItemsSource="{Binding Messages}" >
+        <ScrollViewer Grid.Row="0" Margin="5">
+
+        <ItemsControl Padding="5" Background="White" ItemsSource="{Binding Messages}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" Margin="2">
@@ -36,6 +38,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        </ScrollViewer>
         <TextBox x:Name="text" Grid.Row="1" Margin="5" Text="{Binding Text}"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button Margin="5" Command="{Binding SendMessageCommand}">Send</Button>
