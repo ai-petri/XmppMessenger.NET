@@ -5,16 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XmppMessenger.Views"
         xmlns:viewmodels="clr-namespace:XmppMessenger.ViewModels"
+        xmlns:converters="clr-namespace:XmppMessenger.Converters"
         d:DataContext="{d:DesignInstance Type=viewmodels:ChatViewModel}"
         mc:Ignorable="d"
         Title="{Binding User}" Height="450" Width="800" Background="LightGray">
+    <Window.Resources>
+        <converters:BoolToColorConverter x:Key="boolToColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Margin="5" Background="White" Text="{Binding Chat}"/>
+        <ItemsControl Grid.Row="0" Margin="5" Padding="5" Background="White" ItemsSource="{Binding Messages}" >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="2">
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Width="16" Height="12" Margin="2"  Fill="Yellow" Stroke="Black" StrokeThickness="1"/>
+                            <TextBlock Margin="2" FontWeight="Bold" Foreground="{Binding Incoming, Mode=OneWay, Converter={StaticResource boolToColorConverter}}">
+                            <Run Text="{Binding Jid, Mode=OneWay}"/> (<Run Text="{Binding Date, StringFormat={}{0:hh:mm:ss dd/mm/yyyy} , Mode=OneWay}"/>)
+                            </TextBlock>
+                        </StackPanel>
+                        
+                        <TextBlock Margin="2" Text="{Binding Text, Mode=OneWay}"/>
+                    </StackPanel>
+                    
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <TextBox x:Name="text" Grid.Row="1" Margin="5" Text="{Binding Text}"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button Margin="5" Command="{Binding SendMessageCommand}">Send</Button>

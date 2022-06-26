@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -40,17 +41,7 @@ namespace XmppMessenger.ViewModels
             }
         }
 
-        private string chat;
-
-        public string Chat
-        {
-            get => chat;
-            set
-            {
-                chat = value;
-                RaisePropertyChanged();
-            }
-        }
+        public ObservableCollection<Message> Messages { get; private set; } = new ObservableCollection<Message>();
 
         public RelayCommand SendMessageCommand { get; private set; }
 
@@ -60,15 +51,19 @@ namespace XmppMessenger.ViewModels
 
             client.MessageRecieved += ProcessMessage;
 
-            SendMessageCommand = new RelayCommand(_ => { client.SendMessage(user, Text); Text = ""; });
+            SendMessageCommand = new RelayCommand(_ => 
+            {
+                client.SendMessage(user, Text);
+                Application.Current.Dispatcher.Invoke(() => Messages.Add(new Message("chat", client.Jid, Text, false)));
+                Text = "";
+            });
         }
 
         private void ProcessMessage(Message message)
         {
-            if(message.From.StartsWith(User.Jid))
+            if(message.From.StartsWith(User.Jid) && message.Text != "")
             {
-                Chat += message.Text;
-                Chat += "\n";
+                Application.Current.Dispatcher.Invoke(() => Messages.Add(message));
             }
         }
 

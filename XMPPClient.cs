@@ -18,7 +18,14 @@ namespace XmppMessenger
 {
     class XMPPClient
     {
+        string username = "";
         string hostname = "";
+
+        public string Jid
+        {
+            get => $"{username}@{hostname}";
+        }
+
         string resource = "messenger";
         Random random = new Random();
 
@@ -316,6 +323,9 @@ namespace XmppMessenger
                 Write("<presence />");
                 await Task.Run(() => Read("presence"));
 
+
+                this.username = username;
+                this.hostname = hostname;
 
                 return true;
             }

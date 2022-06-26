@@ -18,10 +18,12 @@ namespace XmppMessenger.Models
 
     class Message
     {
+        public DateTime Date { get; } = DateTime.Now;
         public MessageType Type { get; }
         public string From { get; }
         public string Text { get; }
 
+        public bool Incoming { get; }
         public string Jid
         {
             get => From.Split("/")[0];
@@ -30,10 +32,12 @@ namespace XmppMessenger.Models
         {
             get => From.Split("/")[1];
         }
-        public Message(string type, string from, string text)
+        public Message(string type, string from, string text, bool incoming = true)
         {
             From = from;
             Text = text;
+
+            Incoming = incoming;
 
             switch (type)
             {
@@ -49,6 +53,7 @@ namespace XmppMessenger.Models
                     Type = MessageType.Normal;
                     break;
             }
+
         }
     }
 }
