@@ -146,7 +146,10 @@ namespace XmppMessenger.ViewModels
 
         private void ProcessPresence(Presence presence)
         {
-            AddResourceToRoster(presence.Jid, presence.Resource);
+            if(presence.Resource != null)
+            {
+                AddResourceToRoster(presence.Jid, presence.Resource);
+            }         
         }
 
         private void AddResourceToRoster(string userJid, string resource)

@@ -15,7 +15,11 @@ namespace XmppMessenger.Models
             string[] parts = from.Split("/");
 
             Jid = parts[0];
-            Resource = parts[1];
+
+            if(parts.Length > 1)
+            {
+                Resource = parts[1];
+            }
         }
     }
 }
