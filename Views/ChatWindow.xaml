@@ -8,6 +8,7 @@
         xmlns:converters="clr-namespace:XmppMessenger.Converters"
         d:DataContext="{d:DesignInstance Type=viewmodels:ChatViewModel}"
         mc:Ignorable="d"
+        Icon="/Icon.ico"
         Title="{Binding User}" Height="450" Width="800" Background="LightGray">
     <Window.Resources>
         <converters:BoolToColorConverter x:Key="boolToColorConverter"/>
